@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "ACA",
+    "ABA"
+  ],
+  "key": {
+    "A": [
+      {
+        "item": "minecraft:iron_ingot"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:lapis_block"
+      }
+    ],
+    "C": [
+      {
+        "item": "simpleminer:crystal"
+      }
+    ]
+  },
+  "result": {
+    "item": "simpleminer:efficiency"
+  }
+}

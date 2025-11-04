@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "simpleminer:crystal"
+  },
+  "result": "simpleminer:crystal",
+  "cookingtime": 1600
+}

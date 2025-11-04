@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "simpleminer:block/efficiency"
+    },
+    "facing=south": {
+      "model": "simpleminer:block/efficiency",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "simpleminer:block/efficiency",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "simpleminer:block/efficiency",
+      "y": 90
+    }
+  }
+}

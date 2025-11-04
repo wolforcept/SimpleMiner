@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "simpleminer:block/speed"
+    },
+    "facing=south": {
+      "model": "simpleminer:block/speed",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "simpleminer:block/speed",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "simpleminer:block/speed",
+      "y": 90
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BAB",
+    "ACA",
+    "AAA"
+  ],
+  "key": {
+    "A": [
+      {
+        "item": "minecraft:iron_ingot"
+      }
+    ],
+    "B": [
+      {
+        "item": "minecraft:emerald_block"
+      }
+    ],
+    "C": [
+      {
+        "item": "simpleminer:crystal"
+      }
+    ]
+  },
+  "result": {
+    "item": "simpleminer:area"
+  }
+}
