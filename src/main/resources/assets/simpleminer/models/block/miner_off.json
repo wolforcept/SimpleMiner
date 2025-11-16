@@ -1,0 +1,8 @@
+{
+    "credit": "Made with Blockbench",
+    "parent": "simpleminer:block/miner",
+    "textures": {
+        "0": "simpleminer:block/miner_off",
+        "particle": "simpleminer:block/miner_off"
+    }
+}

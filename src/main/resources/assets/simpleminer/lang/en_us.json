@@ -4,5 +4,5 @@
   "block.simpleminer.efficiency": "Miner Efficiency Upgrade",
   "block.simpleminer.area": "Miner Area Upgrade",
   "item.simpleminer.crystal": "Mining Crystal",
-  "itemGroup.simpleminer_tab": "Simple Miner"
+  "itemGroup.simpleminer": "Simple Miner"
 }

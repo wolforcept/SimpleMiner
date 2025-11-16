@@ -1,7 +1,13 @@
 {
-	"variants": {
-		"": {
-			"model": "simpleminer:block/miner"
-		}
-	}
+    "variants": {
+        "state=on": {
+            "model": "simpleminer:block/miner"
+        },
+        "state=stuck": {
+            "model": "simpleminer:block/miner_stuck"
+        },
+        "state=off": {
+            "model": "simpleminer:block/miner_off"
+        }
+    }
 }

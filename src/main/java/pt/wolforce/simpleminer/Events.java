@@ -1,25 +1,20 @@
 package pt.wolforce.simpleminer;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
-import net.minecraft.entity.item.minecart.MinecartEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.BatEntity;
-import net.minecraft.entity.passive.CowEntity;
-import net.minecraft.entity.passive.SquidEntity;
-import net.minecraft.entity.passive.fish.SalmonEntity;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.extensions.IForgeEntityMinecart;
-import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+
+@EventBusSubscriber
 public class Events {
 
     @SubscribeEvent
-    public static void onCartTick(EntityEvent e) {
+    public static void onCartTick(PlayerTickEvent.Post event) {
+       /* if (Math.random() < 0.01F) {
+            if (event.getEntity().level().isClientSide()) return;
+            var item = event.getEntity().getItemHeldByArm(HumanoidArm.RIGHT);
+             item.setDamageValue(510);
+        }*/
 //        if (e != null && e.getEntity() != null && e.getEntity().level != null) {
 //
 //            Entity ent = e.getEntity();

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "simpleminer:miner",
+    "simpleminer:speed",
+    "simpleminer:area",
+    "simpleminer:efficiency"
+  ]
+}

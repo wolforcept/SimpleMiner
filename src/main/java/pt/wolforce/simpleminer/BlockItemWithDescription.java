@@ -1,35 +1,33 @@
 package pt.wolforce.simpleminer;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.function.Consumer;
 
-public class BlockItemWithDescription extends BlockItem {
+public class BlockItemWithDescription extends BlockItem  {
 
     private final String[] descr;
 
-    public BlockItemWithDescription(Block block, String... descr) {
-        super(block, new Item.Properties().tab(SimpleMiner.CREATIVE_TAB));
+    public BlockItemWithDescription(Block block, Properties properties, String... descr) {
+        super(block, properties);
         this.descr = descr;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (Screen.hasShiftDown()) {
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull TooltipDisplay tooltipDisplay, @NotNull Consumer<Component> tooltipAdder, TooltipFlag flag) {
+        if (flag.hasShiftDown()) {
             for (String str : descr)
-                tooltip.add(new StringTextComponent(str).withStyle(TextFormatting.DARK_PURPLE));
+                tooltipAdder.accept(Component.literal(str).withStyle(ChatFormatting.DARK_PURPLE));
         } else {
-            tooltip.add(new StringTextComponent("Press SHIFT to learn more.").withStyle(TextFormatting.DARK_GRAY));
+            tooltipAdder.accept(Component.literal("Press SHIFT to learn more.").withStyle(ChatFormatting.DARK_GRAY));
         }
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
     }
 }

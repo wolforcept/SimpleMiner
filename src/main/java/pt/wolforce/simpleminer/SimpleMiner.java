@@ -1,65 +1,80 @@
 package pt.wolforce.simpleminer;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredItem;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.function.Supplier;
+
+// The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(SimpleMiner.MODID)
 public class SimpleMiner {
-
     public static final String MODID = "simpleminer";
+    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
-    public static final ItemGroup CREATIVE_TAB = new ItemGroup(MODID + "_tab") {
-        @Override
-        public ItemStack makeIcon() {
-            return new ItemStack(MINER_BLOCK.get().asItem());
-        }
-    };
+    public static final DeferredBlock<Block> MINER_BLOCK = BLOCKS.registerBlock("miner", MinerBlock::new);
+    public static final DeferredItem<BlockItem> MINER_ITEM = ITEMS.registerItem("miner", (props) ->
+            new BlockItemWithDescription(MINER_BLOCK.get(), props, "Requires an inventory adjacent or diagonally, with mining crystal inside."), Item.Properties::useBlockDescriptionPrefix);
 
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
-    public static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MODID);
+    public static final DeferredBlock<Block> SPEED_BLOCK = BLOCKS.registerBlock("speed", (p) -> new BlockExtra(p, ShapesEnum.SPEED));
+    public static final DeferredItem<BlockItem> SPEED_ITEM = ITEMS.registerItem("speed", (props) ->
+            new BlockItemWithDescription(SPEED_BLOCK.get(), props,"Place adjacent to the miner to boost its speed."), Item.Properties::useBlockDescriptionPrefix);
 
-    public static final RegistryObject<Block> MINER_BLOCK = BLOCKS.register("miner", BlockMiner::new);
-    public static final RegistryObject<Block> SPEED_BLOCK = BLOCKS.register("speed", () -> new BlockExtra(0));
-    public static final RegistryObject<Block> AREA_BLOCK = BLOCKS.register("area", () -> new BlockExtra(1));
-    public static final RegistryObject<Block> EFFICIENCY_BLOCK = BLOCKS.register("efficiency", () -> new BlockExtra(2));
+    public static final DeferredBlock<Block> AREA_BLOCK = BLOCKS.registerBlock("area",  p -> new BlockExtra(p, ShapesEnum.AREA));
+    public static final DeferredItem<BlockItem> AREA_ITEM = ITEMS.registerItem("area", (props) ->
+            new BlockItemWithDescription(AREA_BLOCK.get(), props,"Place adjacent to the miner to boost its range."), Item.Properties::useBlockDescriptionPrefix);
 
-    public static final RegistryObject<Item> CRYSTAL_ITEM = ITEMS.register("crystal", ItemCrystal::new);
-    public static final RegistryObject<Item> MINER_ITEM = ITEMS.register("miner", () -> //
-            new BlockItemWithDescription(MINER_BLOCK.get(), "Requires an inventory adjacent or diagonally, with mining crystal inside."));
-    public static final RegistryObject<Item> SPEED_ITEM = ITEMS.register("speed", () -> //
-            new BlockItemWithDescription(SPEED_BLOCK.get(), "Place adjacent to the miner to boost its speed."));
-    public static final RegistryObject<Item> AREA_ITEM = ITEMS.register("area", () -> //
-            new BlockItemWithDescription(AREA_BLOCK.get(), "Place adjacent to the miner to boost its range."));
-    public static final RegistryObject<Item> EFFICIENCY_ITEM = ITEMS.register("efficiency", () -> //
-            new BlockItemWithDescription(EFFICIENCY_BLOCK.get(), "Place adjacent or diagonal to the miner to boost its efficiency.", "(10% chance to not consume mining crystal per efficiency)"));
+    public static final DeferredBlock<Block> EFFICIENCY_BLOCK = BLOCKS.registerBlock("efficiency", (p) -> new BlockExtra(p, ShapesEnum.EFFICIENCY));
+    public static final DeferredItem<BlockItem> EFFICIENCY_ITEM = ITEMS.registerItem("efficiency", (props) ->
+            new BlockItemWithDescription(EFFICIENCY_BLOCK.get(), props,"Place adjacent or diagonal to the miner to boost its efficiency.", "(10% chance to not consume mining crystal per efficiency)"), Item.Properties::useBlockDescriptionPrefix);
+    public static final DeferredItem<Item> CRYSTAL_ITEM = ITEMS.registerItem("crystal", CrystalItem::new);
 
-    public static final RegistryObject<TileEntityType<TileEntityMiner>> MINER_TILE_ENTITY = //
-            TILE_ENTITIES.register("miner", () -> TileEntityType.Builder.of(TileEntityMiner::new, MINER_BLOCK.get()).build(null));
+    public static final Supplier<BlockEntityType<MinerBlockEntity>> MINER_BLOCK_ENTITY = BLOCK_ENTITIES.register("miner", () -> new BlockEntityType<>(MinerBlockEntity::new, false, MINER_BLOCK.get()));
 
-    public SimpleMiner() {
-        final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        ITEMS.register(modEventBus);
+    // Creates a creative tab with the id "simpleminer:creative_tab" for the example item, that is placed after the combat tab
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> CREATIVE_TAB = CREATIVE_MODE_TABS.register("creative_tab", () -> CreativeModeTab.builder()
+            .title(Component.translatable("itemGroup.simpleminer")) //The language key for the title of your CreativeModeTab
+            .withTabsBefore(CreativeModeTabs.COMBAT)
+            .icon(() -> new ItemStack(MINER_ITEM.get()))
+            .displayItems((parameters, output) -> {
+                ITEMS.getEntries().forEach(entry -> output.accept(entry.get()));
+            }).build());
+
+    // The constructor for the mod class is the first code that is run when your mod is loaded.
+    // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
+    public SimpleMiner(IEventBus modEventBus, ModContainer modContainer) {
+        // Register the Deferred Register to the mod event bus so blocks get registered
         BLOCKS.register(modEventBus);
-        TILE_ENTITIES.register(modEventBus);
-        this.configSetup();
+        // Register the Deferred Register to the mod event bus so items get registered
+        ITEMS.register(modEventBus);
+        // Register the Deferred Register to the mod event bus so tabs get registered
+        CREATIVE_MODE_TABS.register(modEventBus);
+
+        BLOCK_ENTITIES.register(modEventBus);
+
+        // Register the item to a creative tab
+        modEventBus.addListener(this::addCreative);
+        modContainer.registerConfig(ModConfig.Type.STARTUP, Config.SPEC);
     }
 
-    private void configSetup() {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_CONFIG);
-        Config.loadConfig(Config.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve(MODID + "-common.toml"));
+    // Add the example block item to the building blocks tab
+    private void addCreative(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+            event.accept(MINER_ITEM);
+        }
     }
-
 }
